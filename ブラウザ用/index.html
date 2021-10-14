@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8" />
+	<title>chat</title>
+	<style>
+		html,body, .max{width:100%;height:100%;}
+		body{margin:0;}
+		.hide{display:none;}
+		.ta-c{text-align:center;}
+	</style>
+</head>
+<body>
+	<table id=tbl0 class=max>
+		<td class=ta-c>
+			ニックネーム<input id=inpニックネーム>
+			<button id=btn入室>入室</button>
+			<br>
+			<br>
+			※このプログラムはwebSocketを使用するためIEでは動作しません。<br>
+			Edge、Chromeなどでご利用ください。
+		</td>
+	</table>
+	<table id=tbl1 class="max hide">
+		<tr height=1>
+			<td>
+				<table style="width:100%">
+					<td><input id=inp style="width:100%"></td>
+					<td width=1><button id=btn>send</button></td>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div id=div style="height:100%;border:solid 1px #000;overflow:auto;"></div>
+			</td>
+		</tr>
+		<tr height=1>
+			<td>
+				<button onclick="webSocket通信.getURL()">get URL</button>
+				<button onclick="webSocket通信.getLog()">get Log</button>
+			</td>
+		</tr>
+	</table>
+</body>
+<script src="./base.js"></script>
+<script src="./DOM関係.js"></script>
+<script>
+	dom短縮.グローバル領域に展開()
+	遅延実行  = function(fun, msec){ setTimeout(fun,msec || 1) }
+	遅延focus = function(elem){ return function(){ 遅延実行(function(){ elem.focus() }, 100) } }
+</script>
+<script src="./最前面.js"></script>
+<script src="./webSocket.js"></script>
+<script>
+	
+	onload = ()=>{
+		inpニックネーム.select()
+		最前面.msg(123)
+	}
+	inpニックネーム.onkeydown = (e)=>{ e.keyCode==13 && btn入室.onclick() }
+	let ニックネーム
+	btn入室.onclick = function(){
+		ニックネーム = inpニックネーム.value
+		if(!ニックネーム){ alert('ニックネームを入力してください'); return inpニックネーム.select() }
+		
+		const 履歴 = []
+		const msgHandler = (msg) => {
+			履歴.push(msg)
+			div.innerText = 履歴.join('\n')
+			div.scrollTo(0, 履歴.length * 100)
+		}
+		webSocket通信.開始(ニックネーム, msgHandler)
+		tbl0.style.display = 'none'
+		tbl1.style.display = 'table' // http://www.htmq.com/style/display.shtml
+		inp.select()
+	}
+	
+	inp.onkeydown = (e)=>{ e.keyCode==13 && btn.onclick() }
+	btn.onclick = ()=>{
+		const msg = inp.value
+		if(!msg){return}
+		webSocket通信.msg(msg)
+		inp.value = ""
+		inp.select()
+	}
+</script>
+</html>

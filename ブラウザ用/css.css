@@ -1,0 +1,13 @@
+.max{width:100%;height:100%}
+.w-max{width:100%}
+.nowrap{white-space:nowrap}
+.ta-c{text-align:center}
+.bc{border-collapse:collapse}
+.of-auto{overflow:auto}
+.of-hidden{overflow:hidden}
+.border1{border:solid 1px #000}
+.imeDis{ime-mode:disabled}
+.caption{background-color:#ccf}
+
+.tdPad{padding:10px}
+*{font-size:1.02em}
